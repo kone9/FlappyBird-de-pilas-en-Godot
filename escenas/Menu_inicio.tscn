@@ -1,0 +1,91 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://codigos/Menu_inicio.gd" type="Script" id=1]
+[ext_resource path="res://escenas/nuve.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Typografias/KGPrimaryItalics.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="ProceduralSky" id=1]
+
+[sub_resource type="Environment" id=2]
+background_mode = 3
+background_sky = SubResource( 1 )
+background_color = Color( 0, 0.407843, 0.737255, 1 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "camara_temblor"
+length = 0.22
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("camaras/Camera:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.02, 0.05, 0.08, 0.11, 0.13, 0.16, 0.19, 0.22 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 1.46, 3.78, 0 ), Vector3( -3.07, 8.992, 0 ), Vector3( 0, 4.553, 0 ), Vector3( 0, 0, 0 ), Vector3( 1.46, 3.78, 0 ), Vector3( -3.07, 8.992, 0 ), Vector3( 0, 4.553, 0 ), Vector3( 0, 0, 0 ) ]
+}
+
+[sub_resource type="DynamicFont" id=4]
+size = 80
+font_data = ExtResource( 3 )
+
+[node name="Menu_inicio" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="Escena_principal" type="Spatial" parent="." groups=[
+"Escena_principal",
+]]
+
+[node name="iluminacion" type="Spatial" parent="Escena_principal"]
+editor/display_folded = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Escena_principal/iluminacion"]
+environment = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="Escena_principal/iluminacion"]
+transform = Transform( 1, 0, 0, 0, 0.412938, 0.910759, 0, -0.910759, 0.412938, 0, 11, 0 )
+light_energy = 0.5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Escena_principal"]
+anims/camara_temblor = SubResource( 3 )
+
+[node name="camaras" type="Spatial" parent="Escena_principal"]
+editor/display_folded = true
+
+[node name="Camera" type="Camera" parent="Escena_principal/camaras"]
+
+[node name="Cameraalejada" type="Camera" parent="Escena_principal/camaras"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 46 )
+
+[node name="nuves" type="Spatial" parent="Escena_principal"]
+editor/display_folded = true
+
+[node name="nuve" parent="Escena_principal/nuves" instance=ExtResource( 2 )]
+transform = Transform( 3, 0, 0, 0, 2, 0, 0, 0, 2, 1.32615, 13.24, -30 )
+
+[node name="nuve2" parent="Escena_principal/nuves" instance=ExtResource( 2 )]
+transform = Transform( 3, 0, 0, 0, 2, 0, 0, 0, 2, 28.8076, -14.61, -30 )
+
+[node name="nuve3" parent="Escena_principal/nuves" instance=ExtResource( 2 )]
+transform = Transform( 3, 0, 0, 0, 2, 0, 0, 0, 2, -34.1296, -3.52, -30 )
+
+[node name="Button" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -309.0
+margin_top = -44.0
+margin_right = 309.0
+margin_bottom = 44.0
+custom_fonts/font = SubResource( 4 )
+text = "Presione para iniciar"
+
+[node name="Posicicion_inicial" type="Position3D" parent="Button" groups=[
+"Posicicion_inicial",
+]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, -20 )
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

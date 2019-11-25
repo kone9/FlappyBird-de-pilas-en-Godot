@@ -1,0 +1,205 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://codigos/Escena_principal.gd" type="Script" id=1]
+[ext_resource path="res://escenas/pollo_cocido.tscn" type="PackedScene" id=2]
+[ext_resource path="res://escenas/diamante.tscn" type="PackedScene" id=3]
+[ext_resource path="res://escenas/Cuchillo.tscn" type="PackedScene" id=4]
+[ext_resource path="res://escenas/pajaro.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Typografias/KGPrimaryItalics.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://escenas/nuve.tscn" type="PackedScene" id=7]
+[ext_resource path="res://musica_and_vfx/Christian_Bjoerklund_-_01_-_Hallon.ogg" type="AudioStream" id=8]
+[ext_resource path="res://musica_and_vfx/powerUP.wav" type="AudioStream" id=9]
+[ext_resource path="res://musica_and_vfx/Sonido de Gallinas - Sonidos de Animales para niños.wav" type="AudioStream" id=10]
+[ext_resource path="res://musica_and_vfx/jump_11.wav" type="AudioStream" id=11]
+[ext_resource path="res://texturas/textura_transparente_touch.png" type="Texture" id=12]
+
+[sub_resource type="ProceduralSky" id=1]
+
+[sub_resource type="Environment" id=2]
+background_mode = 3
+background_sky = SubResource( 1 )
+background_color = Color( 0, 0.407843, 0.737255, 1 )
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 1, 1, 30 )
+
+[sub_resource type="Animation" id=4]
+resource_name = "camara_temblor"
+length = 0.22
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("camaras/Camera:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.02, 0.05, 0.08, 0.11, 0.13, 0.16, 0.19, 0.22 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 1.46, 3.78, 0 ), Vector3( -3.07, 8.992, 0 ), Vector3( 0, 4.553, 0 ), Vector3( 0, 0, 0 ), Vector3( 1.46, 3.78, 0 ), Vector3( -3.07, 8.992, 0 ), Vector3( 0, 4.553, 0 ), Vector3( 0, 0, 0 ) ]
+}
+
+[sub_resource type="DynamicFont" id=5]
+size = 50
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 60
+font_data = ExtResource( 6 )
+
+[node name="Escena_principal" type="Spatial" groups=[
+"Escena_principal",
+]]
+script = ExtResource( 1 )
+escenas_a_intanciar = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ]
+
+[node name="pajaro" parent="." groups=[
+"pajaro",
+] instance=ExtResource( 5 )]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -15, 0, -20 )
+
+[node name="iluminacion" type="Spatial" parent="."]
+editor/display_folded = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="iluminacion"]
+environment = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="iluminacion"]
+transform = Transform( 1, 0, 0, 0, 0.412938, 0.910759, 0, -0.910759, 0.412938, 0, 11, 0 )
+light_energy = 0.5
+
+[node name="suelo_y_techo" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, -20 )
+
+[node name="suelo" type="StaticBody" parent="suelo_y_techo" groups=[
+"muerte",
+]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -15, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="suelo_y_techo/suelo"]
+shape = SubResource( 3 )
+
+[node name="techo" type="StaticBody" parent="suelo_y_techo" groups=[
+"muerte",
+]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="suelo_y_techo/techo"]
+shape = SubResource( 3 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/camara_temblor = SubResource( 4 )
+
+[node name="UI" type="Node" parent="."]
+editor/display_folded = true
+
+[node name="Boton_reiniciar" type="Button" parent="UI"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -142.5
+margin_top = -29.0
+margin_right = 142.5
+margin_bottom = 29.0
+custom_fonts/font = SubResource( 5 )
+text = "Reiniciar"
+
+[node name="Puntaje" type="Label" parent="UI" groups=[
+"Puntaje",
+]]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -122.0
+margin_right = 122.0
+margin_bottom = 62.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Puntaje = 0"
+
+[node name="Posicicion_inicial" type="Position3D" parent="." groups=[
+"Posicicion_inicial",
+]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, -20 )
+
+[node name="Timer_reiniciar" type="Timer" parent="."]
+wait_time = 1.2
+one_shot = true
+
+[node name="Timer_intanciar_diamantes" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="Timer_instanciar_cuchillos" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="Timer_volver_al_menu" type="Timer" parent="."]
+wait_time = 15.0
+
+[node name="Timer_aumentar_dificultad" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="camaras" type="Spatial" parent="."]
+
+[node name="Camera" type="Camera" parent="camaras"]
+
+[node name="Cameraalejada" type="Camera" parent="camaras"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 46 )
+
+[node name="cuchillo" parent="." groups=[
+"cuchillo",
+] instance=ExtResource( 4 )]
+transform = Transform( -0.989706, 0.143108, 0, -0.143108, -0.989706, 0, 0, 0, 1, 18.51, 0, -20 )
+
+[node name="nuves" type="Spatial" parent="."]
+editor/display_folded = true
+
+[node name="nuve" parent="nuves" instance=ExtResource( 7 )]
+transform = Transform( 3, 0, 0, 0, 2, 0, 0, 0, 2, 1.32615, 13.24, -30 )
+
+[node name="nuve2" parent="nuves" instance=ExtResource( 7 )]
+transform = Transform( 3, 0, 0, 0, 2, 0, 0, 0, 2, 28.8076, -14.61, -30 )
+
+[node name="nuve3" parent="nuves" instance=ExtResource( 7 )]
+transform = Transform( 3, 0, 0, 0, 2, 0, 0, 0, 2, -34.1296, -3.52, -30 )
+
+[node name="Sonidos_and_VfX" type="Node" parent="."]
+editor/display_folded = true
+
+[node name="musica" type="AudioStreamPlayer" parent="Sonidos_and_VfX"]
+stream = ExtResource( 8 )
+autoplay = true
+bus = "Musica"
+
+[node name="coint" type="AudioStreamPlayer" parent="Sonidos_and_VfX" groups=[
+"coint",
+]]
+stream = ExtResource( 9 )
+bus = "coint"
+
+[node name="sonido_morir" type="AudioStreamPlayer" parent="Sonidos_and_VfX" groups=[
+"sonido_morir",
+]]
+stream = ExtResource( 10 )
+bus = "sonido_morir."
+
+[node name="sonido_volar" type="AudioStreamPlayer" parent="Sonidos_and_VfX" groups=[
+"sonido_volar",
+]]
+stream = ExtResource( 11 )
+bus = "sonido_volar"
+
+[node name="Volar_Touch" type="TouchScreenButton" parent="."]
+normal = ExtResource( 12 )
+action = "Volar_Touch"
+[connection signal="pressed" from="UI/Boton_reiniciar" to="." method="_on_Boton_reiniciar_pressed"]
+[connection signal="timeout" from="Timer_reiniciar" to="." method="_on_Timer_reiniciar_timeout"]
+[connection signal="timeout" from="Timer_intanciar_diamantes" to="." method="_on_Timer_intanciar_diamantes_timeout"]
+[connection signal="timeout" from="Timer_instanciar_cuchillos" to="." method="_on_Timer_instanciar_cuchillos_timeout"]
+[connection signal="timeout" from="Timer_volver_al_menu" to="." method="_on_Timer_volver_al_menu_timeout"]
+[connection signal="timeout" from="Timer_aumentar_dificultad" to="." method="_on_Timer_aumentar_dificultad_timeout"]
